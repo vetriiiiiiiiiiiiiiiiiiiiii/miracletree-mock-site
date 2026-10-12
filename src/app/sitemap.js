@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { siteUrl } from "@/lib/seo";
-export const revalidate = 3600;
+// Rendered on request, not at build: the build machine (Vercel's included)
+// has no database to read from, and prerendering this route there failed the
+// whole deployment.
+export const dynamic = "force-dynamic";
 /**
  * The sitemap covers everything that should be indexed and nothing that
  * shouldn't: no account pages, no cart, no checkout, no filtered shop URLs.
@@ -8,6 +11,7 @@ export const revalidate = 3600;
  * requested when the content genuinely changed.
  */
 export default async function sitemap() {
+  // A database outage still yields a valid sitemap of the static pages.
   const [products, categories, articles] = await Promise.all([
     prisma.product.findMany({
       where: { status: "published" },
@@ -21,7 +25,10 @@ export default async function sitemap() {
       where: { status: "published" },
       select: { slug: true, updatedAt: true },
     }),
-  ]);
+  ]).catch((error) => {
+    console.error("[sitemap] database unavailable:", error?.message ?? error);
+    return [[], [], []];
+  });
   const now = new Date();
   const staticRoutes = [
     {
