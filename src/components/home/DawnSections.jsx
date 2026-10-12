@@ -14,8 +14,17 @@ import { Stars } from "@/components/product/ProductCard";
 const scheme = (background) =>
   background ? `dawn-bg-${background === true ? "mint" : background}` : null;
 
+/** Light tints fade in and out (.dawn-flow); the strong bands are solid. */
+const BANDS = new Set(["green", "deep", "magenta", "purple", "teal"]);
+const sectionScheme = (background) =>
+  !background
+    ? null
+    : BANDS.has(background)
+      ? `${scheme(background)} my-9`
+      : `${scheme(background)} dawn-flow`;
+
 /** Category tiles cycle through the colours of the Miracle Tree mark. */
-const TILE_TINTS = ["var(--tint-mint)", "var(--tint-blush)", "var(--tint-cream)", "var(--tint-sky)", "var(--tint-lilac)"];
+const TILE_TINTS = ["var(--tint-mint)", "var(--tint-sage)", "var(--tint-blush)", "var(--tint-cream)", "var(--tint-mint)"];
 
 const unoptimized = (url) =>
   typeof url === "string" ? url.startsWith("/uploads/") : undefined;
@@ -26,7 +35,7 @@ export function ImageBanner({ image, alt, caption, title, subtitle, buttons = []
   return (
     <section className="relative flex min-h-[25rem] items-center md:min-h-[35rem]">
       <Image src={image} alt={alt} fill priority sizes="100vw" className="object-cover" />
-      <div className="absolute inset-0 bg-[rgba(11,61,42,0.55)]" aria-hidden />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,61,42,0.35)_0%,rgba(11,61,42,0.7)_100%)]" aria-hidden />
       <div className="page-width relative z-[1] w-full py-16 text-center">
         <div className="mx-auto max-w-[44rem] text-white">
           {caption ? <p className="caption-uc text-white">{caption}</p> : null}
@@ -83,7 +92,7 @@ export function Multicolumn({ title, subtitle, columns, cols = 3, background = f
     4: "md:grid-cols-2 lg:grid-cols-4",
   };
   return (
-    <section className={cn("dawn-section", background && `${scheme(background)} my-9`)}>
+    <section className={cn("dawn-section", sectionScheme(background))}>
       <div className={cn("page-width", background && "py-6 md:py-9")}>
         {title ? <SectionTitle title={title} subtitle={subtitle} /> : null}
         {children}
@@ -317,7 +326,7 @@ export function CollapsibleContent({ title, subtitle, rows, link }) {
 
 export function RichText({ caption, title, subtitle, buttons = [], background = false }) {
   return (
-    <section className={cn("dawn-section", background && `${scheme(background)} my-9`)}>
+    <section className={cn("dawn-section", sectionScheme(background), background === "magenta" && "!-mb-9")}>
       <div className="page-width py-8 text-center md:py-14">
         <div className="mx-auto max-w-[45rem]">
           {caption ? <p className="caption-uc">{caption}</p> : null}

@@ -46,11 +46,14 @@
   --accent: var(--brand-magenta);
   --link: var(--brand-green);
 
-  --tint-mint: #c8f0d6;
-  --tint-blush: #ffd3e8;
-  --tint-cream: #ffe4a8;
-  --tint-sky: #c4eef5;
-  --tint-lilac: #e8d2f2;
+  /* One family of tints — greens from the logo, with a single warm pink —
+     so neighbouring sections shade into each other instead of clashing. */
+  --tint-mint: #dcf3e5;
+  --tint-sage: #e6f2d9;
+  --tint-blush: #fbe3ee;
+  --tint-cream: #fbf1df;
+  --tint-sky: #dcf3e5;
+  --tint-lilac: #fbe3ee;
 
   --mt-ink-950: #ffffff00;
   --mt-ink: #ffffff;
@@ -782,27 +785,45 @@
   }
 }
 
-/* Colour schemes, as Dawn names them: tinted grounds for alternating
-   sections, and a deep-green band for the ones that should stand out. */
+/* Colour schemes, as Dawn names them. Each tint sets --tint; a section
+   marked .dawn-flow fades that tint in from white and back out again, so the
+   colour flows down the page rather than starting and stopping in blocks. */
 .dawn-bg-2,
-.dawn-bg-mint { background: var(--tint-mint); }
-.dawn-bg-blush { background: var(--tint-blush); }
-.dawn-bg-cream { background: var(--tint-cream); }
-.dawn-bg-sky { background: var(--tint-sky); }
-.dawn-bg-lilac { background: var(--tint-lilac); }
-/* Vivid bands: a full brand colour with white type. */
-.dawn-bg-green { background: rgb(var(--brand-green)); }
+.dawn-bg-mint,
+.dawn-bg-sky { --tint: var(--tint-mint); background: var(--tint); }
+.dawn-bg-sage { --tint: var(--tint-sage); background: var(--tint); }
+.dawn-bg-blush,
+.dawn-bg-lilac { --tint: var(--tint-blush); background: var(--tint); }
+.dawn-bg-cream,
+.dawn-bg-yellow { --tint: var(--tint-cream); background: var(--tint); }
+.dawn-flow {
+  background: linear-gradient(
+    180deg,
+    #fff 0,
+    var(--tint) 7rem,
+    var(--tint) calc(100% - 7rem),
+    #fff 100%
+  );
+}
+
+/* The strong band: brand green deepening across the section, white type. */
+.dawn-bg-green,
+.dawn-bg-purple,
+.dawn-bg-teal {
+  background: linear-gradient(135deg, rgb(var(--brand-green)) 0%, rgb(8, 110, 62) 100%);
+}
+/* The closing band runs from green into the footer's deep green. */
+.dawn-bg-magenta {
+  background: linear-gradient(180deg, rgb(var(--brand-green)) 0%, rgb(var(--brand-deep)) 100%);
+}
 .dawn-bg-deep { background: rgb(var(--brand-deep)); }
-.dawn-bg-magenta { background: rgb(var(--brand-magenta)); }
-.dawn-bg-purple { background: rgb(var(--brand-purple)); }
-.dawn-bg-teal { background: rgb(var(--brand-teal)); }
 :is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) {
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 0.9);
   --heading: 255, 255, 255;
-  --accent: 255, 236, 150;
+  --accent: 255, 214, 235;
   --link: 255, 255, 255;
 }
-:is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) .caption-uc { color: rgb(255, 236, 150); }
+:is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) .caption-uc { color: rgb(255, 214, 235); }
 :is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) .button {
   background: #fff;
   color: rgb(var(--brand-deep));
@@ -813,21 +834,6 @@
   color: #fff;
 }
 :is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) :is(a:not(.button), .header__icon) { color: #fff; }
-
-/* Sunny yellow: bright ground, dark type (white would not be readable). */
-.dawn-bg-yellow {
-  background: rgb(var(--brand-yellow));
-  color: rgba(11, 61, 42, 0.9);
-  --accent: var(--brand-magenta);
-  --link: var(--brand-deep);
-}
-.dawn-bg-inverse {
-  background: rgb(18, 18, 18);
-  color: rgba(255, 255, 255, 0.75);
-}
-.dawn-bg-inverse :is(h1, h2, h3, h4, .h0, .h1, .h2, .h3, .h4) {
-  color: #fff;
-}
 
 /* Headings */
 .h0 { font-size: 2.5rem; }

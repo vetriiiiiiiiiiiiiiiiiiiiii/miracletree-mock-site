@@ -73,7 +73,7 @@ export function Header({
       </a>
 
       {announcement ? (
-        <div className="bg-[rgb(var(--brand-magenta))]">
+        <div className="bg-[linear-gradient(90deg,rgb(var(--brand-deep)),rgb(var(--brand-green)),rgb(var(--brand-deep)))]">
           <p className="page-width py-2.5 text-center text-[0.8125rem] leading-snug tracking-[0.0625rem] text-white">
             {announcement}
           </p>
