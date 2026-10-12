@@ -1,0 +1,25 @@
+node_modules
+.next
+out
+.env
+.env*.local
+*.db
+*.db-journal
+prisma/dev.db*
+/public/uploads/*
+!/public/uploads/.gitkeep
+.DS_Store
+next-env.d.ts
+tsconfig.tsbuildinfo
+e2e/.auth/
+shots/
+test-results/
+
+# Built by scripts/export-content.mjs during the image build.
+content-snapshot.json
+
+# Bundled by the Dockerfile from scripts/import-catalogue.ts.
+prisma/import-catalogue.mjs
+
+# Local MongoDB data (scripts/local-mongo.mjs)
+.mongo-data/

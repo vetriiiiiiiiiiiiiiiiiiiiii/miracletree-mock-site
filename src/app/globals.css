@@ -1,0 +1,1186 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Miracle Tree — design tokens
+   ==========================================================================
+   The palette is defined twice, as `--mt-*` runtime variables: once for the
+   dark ground (the brand default) and once for paper. `@theme inline` below
+   points every Tailwind colour utility at those variables rather than at a
+   fixed value, so `bg-ink` / `text-cream-100` resolve per theme and the whole
+   site flips without a single class changing.
+
+   Read the scales by ROLE, not by their name's literal colour:
+     ink-*     surface, darkest → lightest step away from the page
+     cream-*   foreground, strongest → most muted
+     forest-*  tinted section grounds
+     emerald / leaf / gold  brand accents, kept in hue across both themes
+
+   `data-theme` is always written explicitly by the inline script in
+   `src/app/layout.tsx`, which resolves the "system" setting before first
+   paint. CSS therefore needs no `prefers-color-scheme` branch, and no-JS
+   visitors get the dark brand default.
+   ========================================================================== */
+
+/* Dawn — scheme 1. One palette for every page: white ground, near-black
+   text at stepped opacities, and the accent roles (emerald, leaf, gold) all
+   collapse onto the foreground, because Dawn has no brand accent colour. */
+:root,
+:root[data-theme="dark"],
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --dawn-fg: 18, 18, 18;
+  --dawn-bg: 255, 255, 255;
+
+  --mt-ink-950: #ffffff00;
+  --mt-ink: #ffffff;
+  --mt-ink-900: #ffffff;
+  --mt-ink-800: #f3f3f3;
+  --mt-ink-700: #ebebeb;
+  --mt-ink-600: #dedede;
+  --mt-ink-500: #c4c4c4;
+
+  --mt-forest-900: #f3f3f3;
+  --mt-forest-800: #f3f3f3;
+  --mt-forest-700: #ebebeb;
+
+  --mt-emerald-600: #121212;
+  --mt-emerald-500: #121212;
+  --mt-emerald-400: #121212;
+  --mt-leaf-400: #121212;
+  --mt-leaf-300: #121212;
+  --mt-leaf-200: #121212;
+
+  --mt-gold-600: #121212;
+  --mt-gold-500: #121212;
+  --mt-gold-400: #121212;
+  --mt-gold-300: #121212;
+
+  --mt-cream-50: #121212;
+  --mt-cream-100: #121212;
+  --mt-cream-200: #2f2f2f;
+  --mt-cream-300: #4d4d4d;
+  --mt-cream-400: #6b6b6b;
+
+  --mt-border-subtle: #12121214;
+  --mt-border-strong: #12121226;
+  --mt-success: #428445;
+  --mt-warning: #8a6210;
+  --mt-danger: #b3261e;
+
+  --mt-on-accent: #ffffff;
+
+  --mt-photo-from: #ffffff;
+  --mt-photo-to: #ffffff;
+  --mt-on-photo: #121212;
+
+  --mt-world-void: #ffffff;
+  --mt-grain-opacity: 0;
+  --mt-glass: #ffffff;
+  --mt-shadow-card: none;
+  --mt-shadow-drawer: none;
+}
+
+/* Colour utilities point at the runtime variables, so a theme swap on <html>
+   repaints without regenerating a single class. */
+@theme inline {
+  --color-ink-950: var(--mt-ink-950);
+  --color-ink: var(--mt-ink);
+  --color-ink-900: var(--mt-ink-900);
+  --color-ink-800: var(--mt-ink-800);
+  --color-ink-700: var(--mt-ink-700);
+  --color-ink-600: var(--mt-ink-600);
+  --color-ink-500: var(--mt-ink-500);
+
+  --color-forest-900: var(--mt-forest-900);
+  --color-forest-800: var(--mt-forest-800);
+  --color-forest-700: var(--mt-forest-700);
+  --color-emerald-600: var(--mt-emerald-600);
+  --color-emerald-500: var(--mt-emerald-500);
+  --color-emerald-400: var(--mt-emerald-400);
+  --color-leaf-400: var(--mt-leaf-400);
+  --color-leaf-300: var(--mt-leaf-300);
+  --color-leaf-200: var(--mt-leaf-200);
+
+  --color-gold-600: var(--mt-gold-600);
+  --color-gold-500: var(--mt-gold-500);
+  --color-gold-400: var(--mt-gold-400);
+  --color-gold-300: var(--mt-gold-300);
+
+  --color-cream-50: var(--mt-cream-50);
+  --color-cream-100: var(--mt-cream-100);
+  --color-cream-200: var(--mt-cream-200);
+  --color-cream-300: var(--mt-cream-300);
+  --color-cream-400: var(--mt-cream-400);
+
+  --color-surface: var(--mt-ink);
+  --color-surface-raised: var(--mt-ink-800);
+  --color-border-subtle: var(--mt-border-subtle);
+  --color-border-strong: var(--mt-border-strong);
+
+  --color-on-accent: var(--mt-on-accent);
+  --color-photo-from: var(--mt-photo-from);
+  --color-photo-to: var(--mt-photo-to);
+  --color-on-photo: var(--mt-on-photo);
+  --color-success: var(--mt-success);
+  --color-warning: var(--mt-warning);
+  --color-danger: var(--mt-danger);
+}
+
+@theme {
+  /* --- Type --------------------------------------------------------------- */
+  /* Times New Roman throughout.
+   *
+   * The three roles are kept as separate tokens even though they now resolve
+   * to the same stack: the components ask for a display, body or margin face
+   * by name, and collapsing the tokens would mean editing every one of them to
+   * ever tell the voices apart again.
+   *
+   * Times is a system font, so nothing is downloaded and there is no swap.
+   * Liberation Serif and Nimbus Roman are the metric-compatible substitutes
+   * Linux ships — without them a container with no Microsoft fonts falls back
+   * to whatever generic serif it has, which is not the same shape at all.
+   */
+  --font-display: var(--font-assistant), "Assistant", sans-serif;
+  --font-sans: var(--font-assistant), "Assistant", sans-serif;
+  --font-hand: var(--font-assistant), "Assistant", sans-serif;
+
+  --text-hero: clamp(1.875rem, 4vw, 2.5rem);
+  --text-hero--line-height: 1.3;
+  --text-hero--letter-spacing: 0.06rem;
+
+  --text-display: clamp(1.875rem, 3.2vw, 2.5rem);
+  --text-display--line-height: 1.3;
+  --text-display--letter-spacing: 0.06rem;
+
+  --text-title: clamp(1.25rem, 2.2vw, 1.5rem);
+  --text-title--line-height: 1.3;
+  --text-title--letter-spacing: 0.06rem;
+
+  --text-eyebrow: 0.625rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.13rem;
+
+  /* --- Motion ------------------------------------------------------------- */
+  --ease-organic: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-swift: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- Layout ------------------------------------------------------------- */
+  /* 1rem at 320px, easing up to 5rem on wide screens. The previous floor of
+     1.25rem left the header 4px wider than the narrowest phones. */
+  --spacing-gutter: 0.9375rem;
+  --radius-card: 0px;
+
+  /* The announcement bar plus the header. The homepage hero pulls itself up by
+     this much so a 100svh stage actually fills the viewport rather than ending
+     that far below the fold — the header is transparent over the hero there,
+     so it is meant to sit on top of it. */
+  --header-offset: 6.125rem;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  @media (min-width: 768px) {
+    :root {
+      --header-offset: 7.125rem;
+      --spacing-gutter: 3.125rem;
+    }
+  }
+
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border-subtle);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* Anchored targets must clear the sticky header, or a deep link lands with
+       its heading hidden underneath it. */
+    scroll-padding-top: calc(var(--header-offset) + 1rem);
+    /* Lenis drives scroll on desktop; this is the no-JS / reduced-motion path. */
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    background-color: rgb(var(--dawn-bg));
+    color: rgba(var(--dawn-fg), 0.75);
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    letter-spacing: 0.0375rem;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* `clip`, not `hidden`. Both stop a stray wide element from scrolling the
+       page sideways, but `hidden` makes the body a scroll container, and a
+       scroll container silently breaks every `position: sticky` descendant —
+       which is how the timeline's pinned years were failing with no error and
+       no warning. `clip` does the same job without creating one. */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.0375rem;
+    line-height: 1.3;
+    color: rgb(var(--dawn-fg));
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: rgba(var(--dawn-fg), 0.2);
+    color: rgb(var(--dawn-fg));
+  }
+
+  /* Visible, branded focus ring — never removed, only restyled. */
+  :focus-visible {
+    outline: 0.2rem solid rgba(var(--dawn-fg), 0.5);
+    outline-offset: 0.3rem;
+    box-shadow: 0 0 0 0.3rem rgb(var(--dawn-bg)), 0 0 0.5rem 0.4rem rgba(var(--dawn-fg), 0.3);
+  }
+
+  /* Custom cursor replaces the native one only where it is actually active. */
+  html[data-cursor-mode="custom"],
+  html[data-cursor-mode="custom"] a,
+  html[data-cursor-mode="custom"] button {
+    cursor: none;
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+@utility gutter {
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility eyebrow {
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--text-eyebrow--letter-spacing);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* A surface rather than a box.
+ *
+ * One hairline of light along the top edge and a shadow beneath is most of the
+ * difference between a rectangle drawn on a page and a panel sitting above it.
+ * The highlight is brightest in the middle and fades at both ends, because a
+ * full-width line reads as a border and a border is what we are trying not to
+ * look like.
+ */
+@utility panel-lit {
+  position: relative;
+  box-shadow: var(--mt-shadow-card);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--mt-cream-50) 26%, transparent) 35%,
+      color-mix(in oklab, var(--mt-cream-50) 26%, transparent) 65%,
+      transparent
+    );
+  }
+}
+
+/* The ground a product sits on: a pool of light under it, tight and elliptical,
+ * so the pack casts rather than hovers. */
+@utility product-pool {
+  background:
+    radial-gradient(
+      58% 42% at 50% 62%,
+      color-mix(in oklab, var(--mt-forest-700) 90%, transparent) 0%,
+      transparent 70%
+    );
+}
+
+/* Grain sits over dark surfaces so large black areas do not band on OLED. */
+@utility grain {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: var(--mt-grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* ==========================================================================
+   Motion primitives
+   Elements start hidden only when JS will animate them in; `no-js` and
+   reduced-motion users get them immediately.
+   ========================================================================== */
+
+[data-animate] {
+  will-change: transform, opacity;
+}
+
+.js [data-animate="fade-up"],
+.js [data-animate="fade"] {
+  opacity: 0;
+}
+
+.js [data-animate="fade-up"] {
+  transform: translate3d(0, 24px, 0);
+}
+
+/* Split-text lines are clipped by a wrapper so glyph descenders survive. */
+.split-line {
+  display: block;
+  overflow: hidden;
+}
+
+.split-line > span {
+  display: block;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .js [data-animate] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   Scrollbar — dark, unobtrusive, still visible enough to grab
+   ========================================================================== */
+
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-600);
+    border: 3px solid var(--color-ink);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-emerald-600);
+  }
+}
+
+/* ==========================================================================
+   Prose — journal articles, policy pages, product descriptions
+   ========================================================================== */
+
+.prose-botanical {
+  color: color-mix(in srgb, var(--color-cream-100) 82%, transparent);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.prose-botanical h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  color: var(--color-cream-50);
+  margin-block: 2.5em 0.75em;
+  letter-spacing: -0.02em;
+}
+
+.prose-botanical h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--color-cream-50);
+  margin-block: 2em 0.5em;
+}
+
+.prose-botanical p {
+  margin-block: 1.15em;
+}
+
+.prose-botanical strong {
+  color: var(--color-cream-50);
+  font-weight: 600;
+}
+
+.prose-botanical em {
+  color: var(--color-leaf-200);
+}
+
+.prose-botanical a {
+  color: var(--color-gold-300);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.prose-botanical ul,
+.prose-botanical ol {
+  margin-block: 1.25em;
+  padding-inline-start: 1.25em;
+  display: grid;
+  gap: 0.5em;
+}
+
+.prose-botanical ul {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.prose-botanical ul > li {
+  position: relative;
+  padding-inline-start: 1.5em;
+}
+
+.prose-botanical ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-emerald-400);
+}
+
+.prose-botanical ol {
+  list-style: decimal;
+}
+
+.prose-botanical blockquote {
+  margin-block: 2em;
+  padding-inline-start: 1.5em;
+  border-inline-start: 1px solid var(--color-gold-500);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--color-cream-50);
+}
+
+.prose-botanical img {
+  margin-block: 2em;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Sketchbook — Our Story
+   The story page is drawn as a naturalist's field notebook: warm paper, ruled
+   lines, ink. It is the one light surface on an otherwise dark site, and that
+   contrast is the point — it reads as a different object, something kept rather
+   than something designed.
+   ========================================================================== */
+
+.paper {
+  --ink: #121212;
+  --ink-soft: rgba(18, 18, 18, 0.75);
+  --rule: transparent;
+
+  position: relative;
+  /* Dawn: every page is the same white ground, the story page included. */
+  background-color: #ffffff;
+  color: var(--ink);
+  isolation: isolate;
+}
+
+/* Fibre. Two low-opacity noise layers rather than a photograph of paper, so it
+   costs nothing to download and never tiles visibly. */
+.paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(180, 165, 120, 0.16) 0%, transparent 42%),
+    radial-gradient(circle at 82% 68%, rgba(150, 140, 100, 0.14) 0%, transparent 46%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* Ruled lines, as a repeating gradient rather than markup. */
+.paper-ruled::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2.19rem,
+    var(--rule) 2.19rem,
+    var(--rule) calc(2.19rem + 1px)
+  );
+}
+
+.paper > *,
+.paper-ruled > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+/* Marginalia: a note written beside the text, slightly off-axis. */
+.margin-note {
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: rgba(18, 18, 18, 0.75);
+}
+
+/* Adhesive tape holding something to the page. */
+.taped::before {
+  content: "";
+  position: absolute;
+  top: -0.65rem;
+  left: 50%;
+  width: 5.5rem;
+  height: 1.35rem;
+  transform: translateX(-50%) rotate(-2.5deg);
+  background: transparent;
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 2;
+}
+
+/* Strokes draw themselves in when they enter the viewport. */
+.js [data-draw] {
+  stroke-dasharray: var(--len, 1000);
+  stroke-dashoffset: var(--len, 1000);
+}
+
+.js [data-draw].is-drawn {
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-draw] {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+}
+
+/* Prose on paper, rather than on the dark ground. */
+.prose-paper {
+  color: var(--ink-soft);
+  font-size: 1.06rem;
+  line-height: 1.8;
+}
+
+.prose-paper h2,
+.prose-paper h3 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.prose-paper h2 {
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  margin-block: 2.4em 0.7em;
+}
+
+.prose-paper h3 {
+  font-size: 1.25rem;
+  margin-block: 2em 0.5em;
+}
+
+.prose-paper p {
+  margin-block: 1.15em;
+}
+
+.prose-paper strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.prose-paper a {
+  color: #121212;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose-paper ul {
+  margin-block: 1.25em;
+  display: grid;
+  gap: 0.5em;
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.prose-paper ul > li {
+  position: relative;
+  padding-inline-start: 1.5em;
+}
+
+.prose-paper ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 7px;
+  height: 7px;
+  border: 1px solid #7d8a6f;
+  border-radius: 999px;
+}
+
+/* Hero entrance. Copy rises; packs arrive with a little more travel and a
+   touch of scale so the cluster assembles rather than appearing. Both are
+   compositor-only — transform and opacity, no layout, no paint. */
+/* Hero: a pack breathing in place, so the composition is never fully still. */
+@keyframes hero-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -10px, 0); }
+}
+
+/* Hero: light travelling across the gold panel, once in a while. */
+@keyframes hero-sheen {
+  0%       { transform: translateX(-130%) skewX(-18deg); }
+  55%, 100% { transform: translateX(230%) skewX(-18deg); }
+}
+
+/* Hero: a rule drawing itself in under a label. */
+@keyframes hero-rule {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes preloader-sweep {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes hero-pack {
+  from { opacity: 0; transform: translate3d(0, 34px, 0) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   Razorpay Overrides
+   ========================================================================== */
+.razorpay-container {
+  backdrop-filter: blur(8px);
+  /* Use !important to override inline styles set by razorpay iframe */
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+@layer components {
+/* ==========================================================================
+   Dawn — component layer
+   Values follow Shopify's Dawn theme (assets/base.css), converted from its
+   62.5% root to this site's 16px root: 1.5rem there = 0.9375rem here.
+   ========================================================================== */
+
+@media (min-width: 750px) {
+  body {
+    font-size: 1rem;
+  }
+}
+
+.page-width {
+  max-width: 75rem;
+  margin-inline: auto;
+  padding-inline: 0.9375rem;
+}
+@media (min-width: 750px) {
+  .page-width {
+    padding-inline: 3.125rem;
+  }
+}
+
+.dawn-section {
+  padding-block: 1.6875rem;
+}
+@media (min-width: 750px) {
+  .dawn-section {
+    padding-block: 2.25rem;
+  }
+}
+
+.dawn-bg-2 {
+  background: rgb(243, 243, 243);
+}
+.dawn-bg-inverse {
+  background: rgb(18, 18, 18);
+  color: rgba(255, 255, 255, 0.75);
+}
+.dawn-bg-inverse :is(h1, h2, h3, h4, .h0, .h1, .h2, .h3, .h4) {
+  color: #fff;
+}
+
+/* Headings */
+.h0 { font-size: 2.5rem; }
+.h1 { font-size: 1.875rem; }
+.h2 { font-size: 1.25rem; }
+.h3 { font-size: 1.0625rem; }
+.h4 { font-size: 0.9375rem; }
+.h5 { font-size: 0.75rem; }
+@media (min-width: 750px) {
+  .h0 { font-size: 3.25rem; }
+  .h1 { font-size: 2.5rem; }
+  .h2 { font-size: 1.5rem; }
+  .h3 { font-size: 1.125rem; }
+  .h5 { font-size: 0.8125rem; }
+}
+:is(.h0, .h1, .h2, .h3, .h4, .h5) {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.0375rem;
+  line-height: 1.3;
+  color: rgb(var(--dawn-fg));
+  word-break: break-word;
+}
+
+.caption-uc {
+  font-size: 0.625rem;
+  letter-spacing: 0.13rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.dawn-subtle {
+  color: rgba(var(--dawn-fg), 0.75);
+}
+.rte p + p {
+  margin-top: 1em;
+}
+.rte a,
+.dawn-link {
+  color: rgb(var(--dawn-fg));
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+  text-decoration-thickness: 0.06rem;
+  transition: text-decoration-thickness 100ms ease;
+}
+.rte a:hover,
+.dawn-link:hover {
+  text-decoration-thickness: 0.12rem;
+}
+
+/* Buttons. Square, solid foreground; the secondary is an outline drawn with a
+   box-shadow so hover can thicken it without moving the layout. */
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.8125rem;
+  min-width: 7.5rem;
+  padding: 0 1.875rem;
+  border: 0;
+  border-radius: 0;
+  background: rgb(var(--dawn-fg));
+  color: rgb(var(--dawn-bg));
+  font: inherit;
+  font-size: 0.9375rem;
+  letter-spacing: 0.0625rem;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 0 0.0625rem rgb(var(--dawn-fg));
+  transition: box-shadow 100ms ease;
+}
+.button:hover {
+  box-shadow: 0 0 0 0.125rem rgb(var(--dawn-fg));
+}
+.button--secondary {
+  background: transparent;
+  color: rgb(var(--dawn-fg));
+}
+.button--full {
+  width: 100%;
+}
+.button--white {
+  background: transparent;
+  color: #fff;
+  box-shadow: 0 0 0 0.0625rem #fff;
+}
+.button--white:hover {
+  box-shadow: 0 0 0 0.125rem #fff;
+}
+.button--white-solid {
+  background: #fff;
+  color: rgb(var(--dawn-fg));
+  box-shadow: 0 0 0 0.0625rem #fff;
+}
+.button:disabled,
+.button[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.button--tertiary {
+  min-height: 2.1875rem;
+  min-width: 0;
+  padding: 0 0.9375rem;
+  font-size: 0.75rem;
+  background: transparent;
+  color: rgba(var(--dawn-fg), 0.75);
+  box-shadow: 0 0 0 0.0625rem rgba(var(--dawn-fg), 0.2);
+}
+
+/* Badges: Dawn's pill, bottom-left of the card media. */
+.badge {
+  display: inline-block;
+  padding: 0.3125rem 0.8125rem 0.375rem;
+  border-radius: 2.5rem;
+  border: 1px solid transparent;
+  font-size: 0.75rem;
+  letter-spacing: 0.0625rem;
+  line-height: 1;
+  text-align: center;
+  background: rgb(var(--dawn-fg));
+  color: rgb(var(--dawn-bg));
+}
+.badge--muted {
+  background: rgb(var(--dawn-bg));
+  color: rgb(var(--dawn-fg));
+  border-color: rgba(var(--dawn-fg), 0.04);
+}
+
+/* Fields */
+.field {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+.field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: 0 0 0 0.0625rem rgba(var(--dawn-fg), 0.55);
+  transition: box-shadow 100ms ease;
+}
+.field:hover::after,
+.field:focus-within::after {
+  box-shadow: 0 0 0 0.125rem rgba(var(--dawn-fg), 0.55);
+}
+.field__input {
+  flex-grow: 1;
+  width: 100%;
+  min-height: 2.8125rem;
+  padding: 0.9375rem;
+  border: 0;
+  border-radius: 0;
+  background: rgb(var(--dawn-bg));
+  color: rgb(var(--dawn-fg));
+  font-size: 1rem;
+  letter-spacing: 0.0625rem;
+  outline: none;
+  box-shadow: none !important;
+}
+.field__input::placeholder {
+  color: rgba(var(--dawn-fg), 0.75);
+}
+.field__button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  color: rgb(var(--dawn-fg));
+  cursor: pointer;
+}
+
+.select {
+  position: relative;
+}
+.select__select {
+  appearance: none;
+  height: 2.8125rem;
+  padding: 0 2.5rem 0 0.9375rem;
+  border: 0;
+  border-radius: 0;
+  background: rgb(var(--dawn-bg));
+  color: rgb(var(--dawn-fg));
+  font-size: 0.875rem;
+  letter-spacing: 0.0375rem;
+  box-shadow: 0 0 0 0.0625rem rgba(var(--dawn-fg), 0.55);
+  cursor: pointer;
+}
+.select__select:hover {
+  box-shadow: 0 0 0 0.125rem rgba(var(--dawn-fg), 0.55);
+}
+
+/* Quantity: Dawn's bordered three-cell box. */
+.quantity {
+  position: relative;
+  display: flex;
+  width: 8.75rem;
+  min-height: 2.8125rem;
+  color: rgb(var(--dawn-fg));
+}
+.quantity::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: 0 0 0 0.0625rem rgba(var(--dawn-fg), 0.55);
+}
+.quantity:hover::after {
+  box-shadow: 0 0 0 0.125rem rgba(var(--dawn-fg), 0.55);
+}
+.quantity--sm {
+  width: 8.75rem;
+  min-height: 2.5rem;
+}
+.quantity__button {
+  display: flex;
+  width: 2.8125rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--dawn-fg));
+  cursor: pointer;
+}
+.quantity__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+.quantity__input {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Product card (card-product, standard style) */
+.card-product__heading a {
+  color: rgb(var(--dawn-fg));
+  text-decoration: none;
+  text-underline-offset: 0.3rem;
+}
+.card-product:hover .card-product__heading a {
+  text-decoration: underline;
+  text-decoration-thickness: 0.12rem;
+}
+.card-product__media img {
+  transition: transform 600ms ease, opacity 600ms ease;
+}
+@media (min-width: 990px) {
+  .card-product:hover .card-product__media img.card-product__img--primary {
+    transform: scale(1.03);
+  }
+}
+
+.price {
+  color: rgb(var(--dawn-fg));
+  font-size: 1rem;
+  letter-spacing: 0.0625rem;
+  line-height: 1.5;
+}
+.price--large {
+  font-size: 1.125rem;
+  letter-spacing: 0.08rem;
+}
+@media (min-width: 750px) {
+  .price--large {
+    font-size: 1.25rem;
+  }
+}
+.price s {
+  color: rgba(var(--dawn-fg), 0.75);
+  font-size: 0.875rem;
+  margin-right: 0.625rem;
+}
+
+/* Variant pills */
+.pill {
+  display: inline-block;
+  padding: 0.625rem 1.25rem;
+  border: 1px solid rgba(var(--dawn-fg), 0.55);
+  border-radius: 2.5rem;
+  background: rgb(var(--dawn-bg));
+  color: rgb(var(--dawn-fg));
+  font-size: 0.875rem;
+  letter-spacing: 0.0625rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 100ms ease;
+}
+.pill:hover {
+  border-color: rgb(var(--dawn-fg));
+}
+.pill[aria-pressed="true"] {
+  background: rgb(var(--dawn-fg));
+  color: rgb(var(--dawn-bg));
+  border-color: rgb(var(--dawn-fg));
+}
+.pill:disabled {
+  color: rgba(var(--dawn-fg), 0.4);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* Collapsible rows (product page "collapsible_tab", homepage FAQ) */
+.accordion {
+  border-top: 1px solid rgba(var(--dawn-fg), 0.08);
+}
+.accordion:last-child,
+.accordion--last {
+  border-bottom: 1px solid rgba(var(--dawn-fg), 0.08);
+}
+.accordion summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9375rem 0;
+  cursor: pointer;
+  list-style: none;
+  color: rgb(var(--dawn-fg));
+}
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+.accordion summary .accordion__caret {
+  margin-left: auto;
+  transition: transform 150ms ease;
+}
+.accordion[open] summary .accordion__caret {
+  transform: rotate(180deg);
+}
+.accordion__content {
+  padding: 0 0 1.25rem;
+}
+
+/* Header menu item: underline on hover and for the current page. */
+.header__menu-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.0375rem;
+  color: rgba(var(--dawn-fg), 0.75);
+  text-decoration: none;
+  text-underline-offset: 0.3rem;
+}
+.header__menu-item:hover,
+.header__menu-item[aria-expanded="true"] {
+  color: rgb(var(--dawn-fg));
+}
+.header__menu-item:hover > span {
+  text-decoration: underline;
+}
+.header__menu-item[aria-current="page"] > span {
+  color: rgb(var(--dawn-fg));
+  text-decoration: underline;
+}
+
+.header__icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: rgb(var(--dawn-fg));
+}
+.header__icon svg {
+  transition: transform 100ms ease;
+}
+.header__icon:hover svg {
+  transform: scale(1.07);
+}
+.cart-count-bubble {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 1.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.0625rem;
+  height: 1.0625rem;
+  border-radius: 100%;
+  background: rgb(var(--dawn-fg));
+  color: rgb(var(--dawn-bg));
+  font-size: 0.5625rem;
+  line-height: 1;
+}
+
+/* Section reveal: Dawn's "reveal sections on scroll" setting. */
+@keyframes dawn-slide-in {
+  from { opacity: 0; transform: translateY(2rem); }
+  to   { opacity: 1; transform: none; }
+}
+.dawn-reveal {
+  animation: dawn-slide-in 600ms cubic-bezier(0, 0, 0.3, 1) both;
+}
+
+}

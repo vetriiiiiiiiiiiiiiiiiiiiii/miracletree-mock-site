@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "miracle-tree-2",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "export PATH=\"$HOME/.local/node/bin:$PATH\"; exec npm run dev -- --port 3002"
+      ],
+      "port": 3002,
+      "autoPort": false
+    }
+  ]
+}
