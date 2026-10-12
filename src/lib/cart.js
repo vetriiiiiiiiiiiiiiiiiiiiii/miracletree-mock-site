@@ -2,7 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { nanoid } from "nanoid";
-import { prisma } from "./prisma";
+import { isDemo, prisma } from "./prisma";
 import { getCurrentUser } from "./auth";
 import { COMMERCE_DEFAULTS } from "./constants";
 import { settingNumber } from "./queries";
@@ -38,6 +38,7 @@ export async function ensureCart() {
   const store = await cookies();
   const sessionUser = await getCurrentUser();
   const existingToken = store.get(CART_COOKIE)?.value;
+  if (existingToken) await hydrateDemoCart(existingToken);
   if (existingToken) {
     const found = await prisma.cart.findUnique({
       where: { token: existingToken },
@@ -74,6 +75,73 @@ export async function ensureCart() {
   setCartCookie(store, token);
   return created;
 }
+/* -------------------------------------------------------------- demo cart
+ * In the database-free demo the cart rows live in one server instance's
+ * memory, but on Vercel consecutive requests can land on different instances.
+ * So the cart's contents also travel in a cookie, with a revision number: any
+ * instance holding an older revision (or none) rebuilds the cart from it.
+ */
+const DEMO_CART_COOKIE = "mt_demo_cart";
+
+async function hydrateDemoCart(token) {
+  if (!isDemo) return;
+  const store = await cookies();
+  let saved = null;
+  try {
+    saved = JSON.parse(store.get(DEMO_CART_COOKIE)?.value ?? "null");
+  } catch {
+    saved = null;
+  }
+  const existing = await prisma.cart.findUnique({
+    where: { token },
+    select: { id: true, demoRev: true },
+  });
+  if (existing && (!saved || existing.demoRev === saved.r)) return;
+  if (existing) {
+    await prisma.cartItem.deleteMany({ where: { cartId: existing.id } });
+    await prisma.cart.delete({ where: { id: existing.id } });
+  }
+  const cart = await prisma.cart.create({
+    data: { token, couponId: saved?.c ?? null },
+    select: { id: true },
+  });
+  for (const [variantId, productId, quantity] of saved?.i ?? []) {
+    await prisma.cartItem.create({
+      data: { cartId: cart.id, variantId, productId, quantity },
+    });
+  }
+  setDemoRev(cart.id, saved?.r ?? 0);
+}
+
+/** The revision is kept on the in-memory row only; it is not a schema field. */
+function setDemoRev(cartId, rev) {
+  globalThis.__demoTables?.Cart?.forEach((row) => {
+    if (row.id === cartId) row.demoRev = rev;
+  });
+}
+
+/** Call after any cart write in a Server Action, so the cookie stays current. */
+export async function persistDemoCart() {
+  if (!isDemo) return;
+  const store = await cookies();
+  const token = store.get(CART_COOKIE)?.value;
+  if (!token) return;
+  const cart = globalThis.__demoTables?.Cart?.find((row) => row.token === token);
+  if (!cart) return;
+  const items = globalThis.__demoTables.CartItem.filter((i) => i.cartId === cart.id);
+  const rev = (cart.demoRev ?? 0) + 1;
+  cart.demoRev = rev;
+  store.set(
+    DEMO_CART_COOKIE,
+    JSON.stringify({
+      r: rev,
+      c: cart.couponId ?? null,
+      i: items.map((i) => [i.variantId, i.productId, i.quantity]),
+    }),
+    { httpOnly: true, sameSite: "lax", path: "/", maxAge: CART_TTL_SECONDS },
+  );
+}
+
 function setCartCookie(store, token) {
   store.set(CART_COOKIE, token, {
     httpOnly: true,
@@ -90,6 +158,7 @@ function setCartCookie(store, token) {
 export const getCart = async () => {
   const token = await getCartToken();
   if (!token) return EMPTY_CART;
+  await hydrateDemoCart(token);
   const cart = await prisma.cart.findUnique({
     where: { token },
     include: {

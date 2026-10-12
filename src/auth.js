@@ -8,6 +8,12 @@ import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
+  // The database-free demo may run without a configured secret; see lib/session.js.
+  secret:
+    process.env.AUTH_SECRET ||
+    (process.env.DEMO_MODE === "1" || !process.env.DATABASE_URL
+      ? "miracle-tree-demo-only-secret-not-for-production-use"
+      : undefined),
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   providers: [

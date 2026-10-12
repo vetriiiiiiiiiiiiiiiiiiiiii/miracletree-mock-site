@@ -5,6 +5,7 @@ import {
   availableStock,
   couponContextFor,
   ensureCart,
+  persistDemoCart,
   evaluateCoupon,
   getCart,
 } from "@/lib/cart";
@@ -59,6 +60,7 @@ export async function addToCartAction(input) {
     where: { id: cart.id },
     data: { updatedAt: new Date() },
   });
+  await persistDemoCart();
   revalidatePath("/", "layout");
   return { ok: true, message: `${variant.product.name} added to your bag.` };
 }
@@ -76,13 +78,15 @@ export async function updateCartItemAction(input) {
   if (!item) return { ok: false, error: "That item is no longer in your bag." };
   if (quantity === 0) {
     await prisma.cartItem.delete({ where: { id: item.id } });
-    revalidatePath("/", "layout");
+    await persistDemoCart();
+  revalidatePath("/", "layout");
     return { ok: true, message: "Removed from your bag." };
   }
   const stock = await availableStock(item.variantId);
   if (quantity > stock)
     return { ok: false, error: `Only ${stock} left in stock.` };
   await prisma.cartItem.update({ where: { id: item.id }, data: { quantity } });
+  await persistDemoCart();
   revalidatePath("/", "layout");
   return { ok: true };
 }
@@ -116,6 +120,7 @@ export async function applyCouponAction(code) {
     where: { id: resolved.id },
     data: { couponId: coupon.id },
   });
+  await persistDemoCart();
   revalidatePath("/", "layout");
   return { ok: true, message: `${coupon.code} applied.` };
 }
@@ -125,6 +130,7 @@ export async function removeCouponAction() {
     where: { id: cart.id },
     data: { couponId: null },
   });
+  await persistDemoCart();
   revalidatePath("/", "layout");
   return { ok: true, message: "Discount removed." };
 }

@@ -7,6 +7,7 @@ import { OrderCelebration } from "@/components/checkout/OrderCelebration";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { placedGuestOrder } from "@/lib/guest-orders";
+import { hydrateDemoOrder } from "@/lib/demo-orders";
 import { formatShopPrice } from "@/lib/money";
 import { formatDate } from "@/lib/utils";
 import { ORDER_STATUS_LABELS } from "@/lib/constants";
@@ -20,6 +21,7 @@ export const metadata = buildMetadata({
 });
 export default async function OrderConfirmationPage({ params }) {
   const { orderNumber } = await params;
+  await hydrateDemoOrder(orderNumber);
   const order = await prisma.order.findUnique({
     where: { orderNumber },
     include: { items: true, events: { orderBy: { createdAt: "asc" } } },

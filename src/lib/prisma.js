@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { createDemoPrisma } from "@/lib/demo-db";
 const globalForPrisma = globalThis;
 const createMockPrisma = () =>
   new Proxy(
@@ -23,11 +24,21 @@ const createMockPrisma = () =>
     },
   );
 
+/**
+ * Demo mode: with no DATABASE_URL (or DEMO_MODE=1) the site runs entirely from
+ * src/demo/snapshot.json through an in-memory stand-in for Prisma. This is how
+ * the clickable client preview deploys to Vercel with no database.
+ */
+export const isDemo =
+  process.env.DEMO_MODE === "1" || !process.env.DATABASE_URL;
+
 export const prisma =
   globalForPrisma.prisma ??
   (process.env.DOCKER_BUILD === "1"
     ? createMockPrisma()
-    : new PrismaClient({
+    : isDemo
+      ? createDemoPrisma()
+      : new PrismaClient({
         log:
           process.env.NODE_ENV === "development"
             ? ["warn", "error"]
@@ -51,6 +62,7 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
  * single line in the schema that DEPLOYMENT.md claims it is.
  */
 export const insensitive =
+  isDemo ||
   (process.env.DATABASE_URL ?? "").startsWith("postgres") ||
   (process.env.DATABASE_URL ?? "").startsWith("mongodb")
     ? { mode: "insensitive" }

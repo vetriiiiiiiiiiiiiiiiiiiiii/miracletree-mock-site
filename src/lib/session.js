@@ -8,8 +8,13 @@ import { jwtVerify, SignJWT } from "jose";
  */
 export const SESSION_COOKIE_NAME = "mt_session";
 export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
+// The database-free demo (no DATABASE_URL) has no customer data to protect, so
+// it may run without a configured secret. A real deployment must set one.
+const DEMO_SECRET = "miracle-tree-demo-only-secret-not-for-production-use";
+const isDemo = process.env.DEMO_MODE === "1" || !process.env.DATABASE_URL;
+
 export function sessionSecret() {
-  const value = process.env.AUTH_SECRET;
+  const value = process.env.AUTH_SECRET || (isDemo ? DEMO_SECRET : undefined);
   if (!value || value.length < 32) {
     throw new Error(
       "AUTH_SECRET is missing or shorter than 32 characters. Set it in .env before starting the server.",

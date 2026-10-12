@@ -1,9 +1,10 @@
 "use server";
 import { cookies } from "next/headers";
 import { rememberGuestOrder } from "@/lib/guest-orders";
+import { persistDemoOrder } from "@/lib/demo-orders";
 import { sendOrderPlacedEmails } from "@/lib/order-mail";
 import { prisma } from "@/lib/prisma";
-import { getCart } from "@/lib/cart";
+import { getCart, persistDemoCart } from "@/lib/cart";
 import { getCurrentUser } from "@/lib/auth";
 import {
   InsufficientStockError,
@@ -210,6 +211,8 @@ export async function placeOrderAction(formData) {
       },
     });
     await clearCart(cart.id);
+    await persistDemoCart();
+    await persistDemoOrder(order.orderNumber);
     // The order is committed; the receipt is a courtesy that must not be able
     // to fail it.
     await sendOrderPlacedEmails(order.orderNumber);
