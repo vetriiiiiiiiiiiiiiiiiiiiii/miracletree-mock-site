@@ -34,20 +34,23 @@
 
   /* Brand colours, sampled from the Miracle Tree logo. The button and badge
      shades are darkened from the logo's so white text on them passes WCAG AA. */
-  --brand-green: 8, 128, 74;        /* #08804A — buttons, links */
+  --brand-green: 10, 154, 82;       /* #0A9A52 — buttons, links */
   --brand-green-bright: 11, 163, 90; /* #0BA35A — logo "tree" */
   --brand-deep: 11, 61, 42;          /* #0B3D2A — headings, footer, bands */
-  --brand-magenta: 196, 14, 112;     /* #C40E70 — sale, accents */
+  --brand-magenta: 224, 17, 127;     /* #E0117F — logo "Miracle" */
+  --brand-purple: 150, 62, 178;      /* #963EB2 — from the tree mark */
+  --brand-teal: 8, 140, 160;         /* #088CA0 — from the tree mark */
+  --brand-yellow: 255, 196, 41;      /* #FFC429 — from the tree mark's orange */
   --brand-orange: 232, 120, 8;       /* stars */
   --heading: 11, 61, 42;
   --accent: var(--brand-magenta);
   --link: var(--brand-green);
 
-  --tint-mint: #eaf6ee;
-  --tint-blush: #fdeef5;
-  --tint-cream: #fff5e6;
-  --tint-sky: #e7f6f8;
-  --tint-lilac: #f4ecf7;
+  --tint-mint: #c8f0d6;
+  --tint-blush: #ffd3e8;
+  --tint-cream: #ffe4a8;
+  --tint-sky: #c4eef5;
+  --tint-lilac: #e8d2f2;
 
   --mt-ink-950: #ffffff00;
   --mt-ink: #ffffff;
@@ -787,28 +790,37 @@
 .dawn-bg-cream { background: var(--tint-cream); }
 .dawn-bg-sky { background: var(--tint-sky); }
 .dawn-bg-lilac { background: var(--tint-lilac); }
-.dawn-bg-green {
-  background: rgb(var(--brand-deep));
-  color: rgba(255, 255, 255, 0.85);
+/* Vivid bands: a full brand colour with white type. */
+.dawn-bg-green { background: rgb(var(--brand-green)); }
+.dawn-bg-deep { background: rgb(var(--brand-deep)); }
+.dawn-bg-magenta { background: rgb(var(--brand-magenta)); }
+.dawn-bg-purple { background: rgb(var(--brand-purple)); }
+.dawn-bg-teal { background: rgb(var(--brand-teal)); }
+:is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) {
+  color: rgba(255, 255, 255, 0.92);
   --heading: 255, 255, 255;
-  --accent: 255, 176, 216;
+  --accent: 255, 236, 150;
   --link: 255, 255, 255;
 }
-.dawn-bg-green .caption-uc { color: #8fe0b2; }
-.dawn-bg-green .button { background: #fff; color: rgb(var(--brand-deep)); box-shadow: 0 0 0 0.0625rem #fff; }
-.dawn-bg-green .button--secondary { background: transparent; color: #fff; }
-.dawn-bg-green a:not(.button),
-.dawn-bg-green .header__icon { color: #fff; }
-.dawn-bg-magenta {
-  background: rgb(var(--brand-magenta));
-  color: rgba(255, 255, 255, 0.9);
-  --heading: 255, 255, 255;
-  --accent: 255, 220, 238;
-  --link: 255, 255, 255;
+:is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) .caption-uc { color: rgb(255, 236, 150); }
+:is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) .button {
+  background: #fff;
+  color: rgb(var(--brand-deep));
+  box-shadow: 0 0 0 0.0625rem #fff;
 }
-.dawn-bg-magenta .caption-uc { color: #ffd1e8; }
-.dawn-bg-magenta .button { background: #fff; color: rgb(var(--brand-magenta)); box-shadow: 0 0 0 0.0625rem #fff; }
-.dawn-bg-magenta .button--secondary { background: transparent; color: #fff; }
+:is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) .button--secondary {
+  background: transparent;
+  color: #fff;
+}
+:is(.dawn-bg-green, .dawn-bg-deep, .dawn-bg-magenta, .dawn-bg-purple, .dawn-bg-teal) :is(a:not(.button), .header__icon) { color: #fff; }
+
+/* Sunny yellow: bright ground, dark type (white would not be readable). */
+.dawn-bg-yellow {
+  background: rgb(var(--brand-yellow));
+  color: rgba(11, 61, 42, 0.9);
+  --accent: var(--brand-magenta);
+  --link: var(--brand-deep);
+}
 .dawn-bg-inverse {
   background: rgb(18, 18, 18);
   color: rgba(255, 255, 255, 0.75);

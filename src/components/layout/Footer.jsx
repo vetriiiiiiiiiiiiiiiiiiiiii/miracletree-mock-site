@@ -10,7 +10,7 @@ import { IconFacebook, IconInstagram, IconYoutube } from "@/components/layout/Ic
 export function Footer({ shop, company, support }) {
   const policies = support.filter((i) => /privacy|terms|returns|shipping/i.test(i.label));
   return (
-    <footer className="dawn-bg-green mt-[2.25rem]">
+    <footer className="dawn-bg-deep mt-[2.25rem]">
       <div className="page-width pb-6 pt-[2.25rem] md:pt-[3.375rem]">
         <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           <FooterBlock title="Shop" items={shop} />

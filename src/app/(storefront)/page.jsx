@@ -159,7 +159,7 @@ export default async function HomePage() {
         <Multicolumn
           title={get("why-moringa")?.title ?? "Why moringa"}
           subtitle={get("why-moringa")?.subtitle ?? null}
-          background
+          background="yellow"
           columns={FACTS.map((f) => ({
             key: f.figure,
             figure: f.figure,
@@ -189,7 +189,7 @@ export default async function HomePage() {
           alt="A MOGO product pack being presented outside the premises"
           caption="Madurai, Tamil Nadu — where the leaf is grown, dried and milled."
           title={storySection?.title ?? "Twenty years under the same tree"}
-          background="blush"
+          background="lilac"
           buttons={[
             {
               href: storySection?.ctaHref ?? "/about",
@@ -211,7 +211,7 @@ export default async function HomePage() {
         <Multicolumn
           title={get("farm-to-product")?.title ?? "Farm to pack"}
           subtitle={get("farm-to-product")?.subtitle ?? null}
-          background="cream"
+          background="green"
           cols={4}
           columns={STEPS.map((step, i) => ({
             key: step.id,
@@ -225,7 +225,7 @@ export default async function HomePage() {
       <Multicolumn
         title="What we developed"
         subtitle="Two drying technologies, the first moringa-leaf energy bar, and cold-pressed seed oil. Built between 2014 and 2019."
-        background="green"
+        background="purple"
         cols={4}
         columns={INNOVATIONS.map((item) => ({
           key: item.slug,
@@ -250,7 +250,7 @@ export default async function HomePage() {
           alt={founder.name}
           caption={founder.role}
           title={founder.name}
-          background="lilac"
+          background="blush"
           reverse
           buttons={[
             { href: "/leadership", label: "His full record" },
@@ -291,7 +291,7 @@ export default async function HomePage() {
       <Multicolumn
         title={`From Madurai to ${COUNTRIES_REACHED} countries`}
         subtitle="Moringa grown, dried and milled in one district in Tamil Nadu, shipped to nine countries on record by name — and in two of them, built from the ground up."
-        background="sky"
+        background="teal"
         cols={2}
         columns={PROJECTS.map((p) => ({
           key: p.country,
