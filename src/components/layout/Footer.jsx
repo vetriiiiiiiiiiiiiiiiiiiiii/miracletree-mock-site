@@ -10,7 +10,7 @@ import { IconFacebook, IconInstagram, IconYoutube } from "@/components/layout/Ic
 export function Footer({ shop, company, support }) {
   const policies = support.filter((i) => /privacy|terms|returns|shipping/i.test(i.label));
   return (
-    <footer className="mt-[2.25rem] border-t border-[rgba(18,18,18,0.08)] bg-white">
+    <footer className="dawn-bg-green mt-[2.25rem]">
       <div className="page-width pb-6 pt-[2.25rem] md:pt-[3.375rem]">
         <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           <FooterBlock title="Shop" items={shop} />
@@ -87,7 +87,7 @@ export function Footer({ shop, company, support }) {
         </div>
       </div>
 
-      <div className="border-t border-[rgba(18,18,18,0.08)]">
+      <div className="border-t border-white/15">
         <div className="page-width flex flex-col items-center gap-3 py-6 text-center text-[0.6875rem] tracking-[0.0375rem] md:flex-row md:justify-between md:text-left">
           <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             <span>
@@ -101,7 +101,7 @@ export function Footer({ shop, company, support }) {
           </p>
           <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             <span>
-              Payments secured by <span className="text-[rgb(18,18,18)]">Razorpay</span>
+              Payments secured by <span className="text-white">Razorpay</span>
             </span>
             <span>
               Crafted by{" "}
@@ -131,7 +131,7 @@ function FooterBlock({ title, items }) {
           <li key={item.id}>
             <Link
               href={item.href}
-              className="text-[0.875rem] tracking-[0.0375rem] hover:text-[rgb(18,18,18)] hover:underline hover:underline-offset-[0.3rem]"
+              className="text-[0.875rem] tracking-[0.0375rem] hover:text-white hover:underline hover:underline-offset-[0.3rem]"
             >
               {item.label}
             </Link>

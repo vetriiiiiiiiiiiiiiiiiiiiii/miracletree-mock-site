@@ -140,7 +140,7 @@ export function ProductCard({
           ) : (
             <span className="sr-only">Regular price</span>
           )}
-          <span>
+          <span className={onSale ? "price--sale" : undefined}>
             {multipleSizes ? "From " : ""}
             {formatShopPrice(displayPrice)}
           </span>
@@ -181,7 +181,7 @@ export function ProductCard({
 export function Stars({ value, size = 12 }) {
   const rounded = Math.round((value ?? 0) * 2) / 2;
   return (
-    <span className="inline-flex text-[rgb(18,18,18)]" aria-label={`${(value ?? 0).toFixed(1)} out of 5 stars`} role="img">
+    <span className="inline-flex text-[rgb(var(--brand-orange))]" aria-label={`${(value ?? 0).toFixed(1)} out of 5 stars`} role="img">
       {[1, 2, 3, 4, 5].map((i) => (
         <svg key={i} width={size} height={size} viewBox="0 0 20 20" aria-hidden>
           <defs>

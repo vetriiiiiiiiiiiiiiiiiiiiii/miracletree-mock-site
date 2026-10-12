@@ -15,7 +15,7 @@ export function NewsletterForm({ source = "site", className }) {
     return (
       <p
         className={cn(
-          "flex items-center gap-2 text-sm text-[rgb(18,18,18)]",
+          "flex items-center gap-2 text-sm",
           className,
         )}
         role="status"
@@ -58,7 +58,7 @@ export function NewsletterForm({ source = "site", className }) {
         </p>
       ) : null}
 
-      <p className="text-xs leading-relaxed text-[rgba(18,18,18,0.75)]">
+      <p className="text-xs leading-relaxed opacity-80">
         We use your address only to send the journal. Unsubscribe from any
         email.
       </p>

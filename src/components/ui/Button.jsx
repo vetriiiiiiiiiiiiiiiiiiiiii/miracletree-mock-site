@@ -7,11 +7,11 @@ import { magneticButton } from "@/lib/motion";
 // that thickens on hover (drawn with box-shadow so the layout never moves).
 const VARIANTS = {
   primary:
-    "bg-[rgb(18,18,18)] text-white shadow-[0_0_0_1px_rgb(18,18,18)] hover:shadow-[0_0_0_2px_rgb(18,18,18)]",
+    "bg-[rgb(var(--brand-green))] text-white shadow-[0_0_0_1px_rgb(var(--brand-green))] hover:shadow-[0_0_0_2px_rgb(var(--brand-green))]",
   secondary:
-    "bg-transparent text-[rgb(18,18,18)] shadow-[0_0_0_1px_rgb(18,18,18)] hover:shadow-[0_0_0_2px_rgb(18,18,18)]",
+    "bg-transparent text-[rgb(var(--brand-green))] shadow-[0_0_0_1px_rgb(var(--brand-green))] hover:shadow-[0_0_0_2px_rgb(var(--brand-green))]",
   ghost: "text-[rgb(18,18,18)] hover:underline underline-offset-[0.3rem]",
-  gold: "bg-[rgb(18,18,18)] text-white shadow-[0_0_0_1px_rgb(18,18,18)] hover:shadow-[0_0_0_2px_rgb(18,18,18)]",
+  gold: "bg-[rgb(var(--brand-magenta))] text-white shadow-[0_0_0_1px_rgb(var(--brand-magenta))] hover:shadow-[0_0_0_2px_rgb(var(--brand-magenta))]",
   danger: "bg-danger text-white hover:brightness-110",
 };
 const SIZES = {

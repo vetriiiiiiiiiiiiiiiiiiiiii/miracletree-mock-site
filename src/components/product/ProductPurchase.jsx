@@ -100,7 +100,7 @@ export function ProductPurchase({
             <span className="sr-only">Sale price</span>
           </>
         ) : null}
-        <span>{formatShopPrice(selected.price)}</span>
+        <span className={onSale ? "price--sale" : undefined}>{formatShopPrice(selected.price)}</span>
         {soldOut ? (
           <span className="badge badge--muted !border-[rgba(18,18,18,0.2)]">Sold out</span>
         ) : onSale ? (
@@ -206,7 +206,7 @@ export function ProductPurchase({
 function IconText({ icon, children }) {
   return (
     <li className="flex items-start gap-3 text-[rgb(18,18,18)]">
-      <span className="mt-0.5 shrink-0">
+      <span className="mt-0.5 shrink-0 text-[rgb(var(--brand-green))]">
         <IconRow name={icon} />
       </span>
       <span className="leading-relaxed">{children}</span>

@@ -10,6 +10,13 @@ import { Stars } from "@/components/product/ProductCard";
  * page, not from here.
  */
 
+/** A section's colour scheme: true means the default tint (mint). */
+const scheme = (background) =>
+  background ? `dawn-bg-${background === true ? "mint" : background}` : null;
+
+/** Category tiles cycle through the colours of the Miracle Tree mark. */
+const TILE_TINTS = ["var(--tint-mint)", "var(--tint-blush)", "var(--tint-cream)", "var(--tint-sky)", "var(--tint-lilac)"];
+
 const unoptimized = (url) =>
   typeof url === "string" ? url.startsWith("/uploads/") : undefined;
 
@@ -19,7 +26,7 @@ export function ImageBanner({ image, alt, caption, title, subtitle, buttons = []
   return (
     <section className="relative flex min-h-[25rem] items-center md:min-h-[35rem]">
       <Image src={image} alt={alt} fill priority sizes="100vw" className="object-cover" />
-      <div className="absolute inset-0 bg-black/50" aria-hidden />
+      <div className="absolute inset-0 bg-[rgba(11,61,42,0.55)]" aria-hidden />
       <div className="page-width relative z-[1] w-full py-16 text-center">
         <div className="mx-auto max-w-[44rem] text-white">
           {caption ? <p className="caption-uc text-white">{caption}</p> : null}
@@ -76,7 +83,7 @@ export function Multicolumn({ title, subtitle, columns, cols = 3, background = f
     4: "md:grid-cols-2 lg:grid-cols-4",
   };
   return (
-    <section className={cn("dawn-section", background && "dawn-bg-2 my-9")}>
+    <section className={cn("dawn-section", background && `${scheme(background)} my-9`)}>
       <div className={cn("page-width", background && "py-6 md:py-9")}>
         {title ? <SectionTitle title={title} subtitle={subtitle} /> : null}
         {children}
@@ -84,9 +91,9 @@ export function Multicolumn({ title, subtitle, columns, cols = 3, background = f
           <ul className={cn("grid gap-x-6 gap-y-10", grid[cols])}>
             {columns.map((c) => (
               <li key={c.key}>
-                {c.eyebrow ? <p className="caption-uc mb-2">{c.eyebrow}</p> : null}
+                {c.eyebrow ? <p className="caption-uc mb-2 text-[rgb(var(--accent))]">{c.eyebrow}</p> : null}
                 {c.figure ? (
-                  <p className="h0 !leading-none">
+                  <p className="h0 !leading-none !text-[rgb(var(--accent))]">
                     {c.figure}
                     {c.unit ? <span className="ml-2 text-[1rem] tracking-normal text-[rgba(18,18,18,0.75)]">{c.unit}</span> : null}
                   </p>
@@ -95,7 +102,7 @@ export function Multicolumn({ title, subtitle, columns, cols = 3, background = f
                 {c.meta ? <p className="mt-1 text-[0.8125rem]">{c.meta}</p> : null}
                 {c.body ? <p className="mt-2 text-[0.9375rem]">{c.body}</p> : null}
                 {c.link ? (
-                  <Link href={c.link.href} className="mt-3 inline-flex items-center gap-2 text-[0.9375rem] text-[rgb(18,18,18)] hover:underline hover:underline-offset-[0.3rem]">
+                  <Link href={c.link.href} className="mt-3 inline-flex items-center gap-2 text-[0.9375rem] text-[rgb(var(--link))] hover:underline hover:underline-offset-[0.3rem]">
                     {c.link.label}
                     <IconArrow />
                   </Link>
@@ -116,7 +123,7 @@ export function ImageWithText({ image, alt, reverse = false, caption, title, chi
   return (
     <section className="dawn-section">
       <div className="page-width">
-        <div className={cn("grid", image && "md:grid-cols-2", background ? "dawn-bg-2" : "border border-[rgba(18,18,18,0.08)]")}>
+        <div className={cn("grid", image && "md:grid-cols-2", background ? scheme(background) : "border border-[rgba(18,18,18,0.08)]")}>
           {/* Without a photograph the text block takes the full width, rather
               than sitting beside an empty panel. */}
           {image ? (
@@ -125,7 +132,7 @@ export function ImageWithText({ image, alt, reverse = false, caption, title, chi
             </div>
           ) : null}
           <div className={cn("flex flex-col justify-center px-6 py-10 md:px-14 md:py-16", !image && "md:mx-auto md:max-w-[50rem]")}>
-            {caption ? <p className="caption-uc">{caption}</p> : null}
+            {caption ? <p className="caption-uc text-[rgb(var(--accent))]">{caption}</p> : null}
             {title ? <h2 className="h1 mt-2">{title}</h2> : null}
             <div className="mt-4 text-[0.9375rem]">{children}</div>
             {buttons.length ? (
@@ -153,19 +160,22 @@ export function CollectionList({ title, collections }) {
       <div className="page-width">
         <SectionTitle title={title} />
         <ul className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-5">
-          {collections.map((c) => (
+          {collections.map((c, i) => (
             <li key={c.slug}>
               <Link href={`/shop/${c.slug}`} className="card-product group block">
-                <div className="card-product__media relative aspect-square overflow-hidden bg-[rgba(18,18,18,0.04)]">
+                <div
+                  className="card-product__media relative aspect-square overflow-hidden"
+                  style={{ background: TILE_TINTS[i % TILE_TINTS.length] }}
+                >
                   {c.image ? (
-                    <Image src={c.image} alt="" fill sizes="(min-width: 990px) 240px, 50vw" className="card-product__img--primary object-contain" unoptimized={unoptimized(c.image)} />
+                    <Image src={c.image} alt="" fill sizes="(min-width: 990px) 240px, 50vw" className="card-product__img--primary object-contain p-4 mix-blend-multiply" unoptimized={unoptimized(c.image)} />
                   ) : null}
                 </div>
                 <h3 className="card-product__heading mt-3 flex items-center gap-2 text-[1rem]">
                   <span className="text-[rgb(18,18,18)] group-hover:underline group-hover:decoration-2 group-hover:underline-offset-[0.3rem]">
                     {c.name}
                   </span>
-                  <IconArrow className="text-[rgb(18,18,18)] transition-transform group-hover:translate-x-1" />
+                  <IconArrow className="text-[rgb(var(--accent))] transition-transform group-hover:translate-x-1" />
                 </h3>
                 <p className="text-[0.8125rem]">{c.count} {c.count === 1 ? "product" : "products"}</p>
               </Link>
@@ -208,7 +218,11 @@ export function Testimonials({ title, subtitle, items, emptyText, emptyLink }) {
         ) : (
           <ul className="grid gap-4 md:grid-cols-3">
             {items.map((item) => (
-              <li key={item.id} className="flex flex-col border border-[rgba(18,18,18,0.08)] p-6">
+              <li
+                key={item.id}
+                className="flex flex-col p-6"
+                style={{ background: TILE_TINTS[items.indexOf(item) % TILE_TINTS.length] }}
+              >
                 {item.rating ? <Stars value={item.rating} size={14} /> : null}
                 <blockquote className="mt-3 flex-1 text-[0.9375rem]">&ldquo;{item.body}&rdquo;</blockquote>
                 <p className="mt-4 text-[0.875rem] text-[rgb(18,18,18)]">
@@ -251,7 +265,7 @@ export function BlogPosts({ title, subtitle, articles, cta }) {
                   <span className="group-hover:underline group-hover:decoration-2 group-hover:underline-offset-[0.3rem]">{a.title}</span>
                 </h3>
                 {a.publishedAt ? (
-                  <p className="caption-uc mt-2">
+                  <p className="caption-uc mt-2 text-[rgb(var(--accent))]">
                     {new Date(a.publishedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
                   </p>
                 ) : null}
@@ -303,7 +317,7 @@ export function CollapsibleContent({ title, subtitle, rows, link }) {
 
 export function RichText({ caption, title, subtitle, buttons = [], background = false }) {
   return (
-    <section className={cn("dawn-section", background && "dawn-bg-2 my-9")}>
+    <section className={cn("dawn-section", background && `${scheme(background)} my-9`)}>
       <div className="page-width py-8 text-center md:py-14">
         <div className="mx-auto max-w-[45rem]">
           {caption ? <p className="caption-uc">{caption}</p> : null}

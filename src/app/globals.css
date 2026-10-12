@@ -32,6 +32,23 @@
   --dawn-fg: 18, 18, 18;
   --dawn-bg: 255, 255, 255;
 
+  /* Brand colours, sampled from the Miracle Tree logo. The button and badge
+     shades are darkened from the logo's so white text on them passes WCAG AA. */
+  --brand-green: 8, 128, 74;        /* #08804A — buttons, links */
+  --brand-green-bright: 11, 163, 90; /* #0BA35A — logo "tree" */
+  --brand-deep: 11, 61, 42;          /* #0B3D2A — headings, footer, bands */
+  --brand-magenta: 196, 14, 112;     /* #C40E70 — sale, accents */
+  --brand-orange: 232, 120, 8;       /* stars */
+  --heading: 11, 61, 42;
+  --accent: var(--brand-magenta);
+  --link: var(--brand-green);
+
+  --tint-mint: #eaf6ee;
+  --tint-blush: #fdeef5;
+  --tint-cream: #fff5e6;
+  --tint-sky: #e7f6f8;
+  --tint-lilac: #f4ecf7;
+
   --mt-ink-950: #ffffff00;
   --mt-ink: #ffffff;
   --mt-ink-900: #ffffff;
@@ -40,23 +57,23 @@
   --mt-ink-600: #dedede;
   --mt-ink-500: #c4c4c4;
 
-  --mt-forest-900: #f3f3f3;
-  --mt-forest-800: #f3f3f3;
-  --mt-forest-700: #ebebeb;
+  --mt-forest-900: #eaf6ee;
+  --mt-forest-800: #eaf6ee;
+  --mt-forest-700: #d6eedd;
 
-  --mt-emerald-600: #121212;
-  --mt-emerald-500: #121212;
-  --mt-emerald-400: #121212;
-  --mt-leaf-400: #121212;
-  --mt-leaf-300: #121212;
-  --mt-leaf-200: #121212;
+  --mt-emerald-600: #08804a;
+  --mt-emerald-500: #08804a;
+  --mt-emerald-400: #0ba35a;
+  --mt-leaf-400: #08804a;
+  --mt-leaf-300: #08804a;
+  --mt-leaf-200: #0b3d2a;
 
-  --mt-gold-600: #121212;
-  --mt-gold-500: #121212;
-  --mt-gold-400: #121212;
-  --mt-gold-300: #121212;
+  --mt-gold-600: #c40e70;
+  --mt-gold-500: #c40e70;
+  --mt-gold-400: #c40e70;
+  --mt-gold-300: #c40e70;
 
-  --mt-cream-50: #121212;
+  --mt-cream-50: #0b3d2a;
   --mt-cream-100: #121212;
   --mt-cream-200: #2f2f2f;
   --mt-cream-300: #4d4d4d;
@@ -239,7 +256,7 @@
     font-weight: 400;
     letter-spacing: 0.0375rem;
     line-height: 1.3;
-    color: rgb(var(--dawn-fg));
+    color: rgb(var(--heading));
     text-wrap: balance;
   }
 
@@ -762,9 +779,36 @@
   }
 }
 
-.dawn-bg-2 {
-  background: rgb(243, 243, 243);
+/* Colour schemes, as Dawn names them: tinted grounds for alternating
+   sections, and a deep-green band for the ones that should stand out. */
+.dawn-bg-2,
+.dawn-bg-mint { background: var(--tint-mint); }
+.dawn-bg-blush { background: var(--tint-blush); }
+.dawn-bg-cream { background: var(--tint-cream); }
+.dawn-bg-sky { background: var(--tint-sky); }
+.dawn-bg-lilac { background: var(--tint-lilac); }
+.dawn-bg-green {
+  background: rgb(var(--brand-deep));
+  color: rgba(255, 255, 255, 0.85);
+  --heading: 255, 255, 255;
+  --accent: 255, 176, 216;
+  --link: 255, 255, 255;
 }
+.dawn-bg-green .caption-uc { color: #8fe0b2; }
+.dawn-bg-green .button { background: #fff; color: rgb(var(--brand-deep)); box-shadow: 0 0 0 0.0625rem #fff; }
+.dawn-bg-green .button--secondary { background: transparent; color: #fff; }
+.dawn-bg-green a:not(.button),
+.dawn-bg-green .header__icon { color: #fff; }
+.dawn-bg-magenta {
+  background: rgb(var(--brand-magenta));
+  color: rgba(255, 255, 255, 0.9);
+  --heading: 255, 255, 255;
+  --accent: 255, 220, 238;
+  --link: 255, 255, 255;
+}
+.dawn-bg-magenta .caption-uc { color: #ffd1e8; }
+.dawn-bg-magenta .button { background: #fff; color: rgb(var(--brand-magenta)); box-shadow: 0 0 0 0.0625rem #fff; }
+.dawn-bg-magenta .button--secondary { background: transparent; color: #fff; }
 .dawn-bg-inverse {
   background: rgb(18, 18, 18);
   color: rgba(255, 255, 255, 0.75);
@@ -792,7 +836,7 @@
   font-weight: 400;
   letter-spacing: 0.0375rem;
   line-height: 1.3;
-  color: rgb(var(--dawn-fg));
+  color: rgb(var(--heading));
   word-break: break-word;
 }
 
@@ -810,7 +854,7 @@
 }
 .rte a,
 .dawn-link {
-  color: rgb(var(--dawn-fg));
+  color: rgb(var(--link));
   text-decoration: underline;
   text-underline-offset: 0.3rem;
   text-decoration-thickness: 0.06rem;
@@ -834,7 +878,7 @@
   padding: 0 1.875rem;
   border: 0;
   border-radius: 0;
-  background: rgb(var(--dawn-fg));
+  background: rgb(var(--brand-green));
   color: rgb(var(--dawn-bg));
   font: inherit;
   font-size: 0.9375rem;
@@ -842,15 +886,18 @@
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 0 0 0.0625rem rgb(var(--dawn-fg));
-  transition: box-shadow 100ms ease;
+  box-shadow: 0 0 0 0.0625rem rgb(var(--brand-green));
+  transition: box-shadow 100ms ease, background-color 100ms ease;
 }
 .button:hover {
-  box-shadow: 0 0 0 0.125rem rgb(var(--dawn-fg));
+  box-shadow: 0 0 0 0.125rem rgb(var(--brand-green));
 }
 .button--secondary {
   background: transparent;
-  color: rgb(var(--dawn-fg));
+  color: rgb(var(--brand-green));
+}
+.button--secondary:hover {
+  background: rgba(var(--brand-green), 0.06);
 }
 .button--full {
   width: 100%;
@@ -865,7 +912,7 @@
 }
 .button--white-solid {
   background: #fff;
-  color: rgb(var(--dawn-fg));
+  color: rgb(var(--brand-deep));
   box-shadow: 0 0 0 0.0625rem #fff;
 }
 .button:disabled,
@@ -893,7 +940,7 @@
   letter-spacing: 0.0625rem;
   line-height: 1;
   text-align: center;
-  background: rgb(var(--dawn-fg));
+  background: rgb(var(--brand-magenta));
   color: rgb(var(--dawn-bg));
 }
 .badge--muted {
@@ -1054,8 +1101,11 @@
     font-size: 1.25rem;
   }
 }
+.price--sale {
+  color: rgb(var(--brand-magenta));
+}
 .price s {
-  color: rgba(var(--dawn-fg), 0.75);
+  color: rgba(var(--dawn-fg), 0.6);
   font-size: 0.875rem;
   margin-right: 0.625rem;
 }
@@ -1078,9 +1128,9 @@
   border-color: rgb(var(--dawn-fg));
 }
 .pill[aria-pressed="true"] {
-  background: rgb(var(--dawn-fg));
+  background: rgb(var(--brand-green));
   color: rgb(var(--dawn-bg));
-  border-color: rgb(var(--dawn-fg));
+  border-color: rgb(var(--brand-green));
 }
 .pill:disabled {
   color: rgba(var(--dawn-fg), 0.4);
@@ -1139,8 +1189,13 @@
   text-decoration: underline;
 }
 .header__menu-item[aria-current="page"] > span {
-  color: rgb(var(--dawn-fg));
+  color: rgb(var(--brand-green));
   text-decoration: underline;
+  text-decoration-color: rgb(var(--brand-magenta));
+  text-decoration-thickness: 0.12rem;
+}
+.header__menu-item:hover > span {
+  text-decoration-color: rgb(var(--brand-magenta));
 }
 
 .header__icon {
@@ -1168,7 +1223,7 @@
   width: 1.0625rem;
   height: 1.0625rem;
   border-radius: 100%;
-  background: rgb(var(--dawn-fg));
+  background: rgb(var(--brand-magenta));
   color: rgb(var(--dawn-bg));
   font-size: 0.5625rem;
   line-height: 1;

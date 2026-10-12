@@ -189,6 +189,7 @@ export default async function HomePage() {
           alt="A MOGO product pack being presented outside the premises"
           caption="Madurai, Tamil Nadu — where the leaf is grown, dried and milled."
           title={storySection?.title ?? "Twenty years under the same tree"}
+          background="blush"
           buttons={[
             {
               href: storySection?.ctaHref ?? "/about",
@@ -210,6 +211,7 @@ export default async function HomePage() {
         <Multicolumn
           title={get("farm-to-product")?.title ?? "Farm to pack"}
           subtitle={get("farm-to-product")?.subtitle ?? null}
+          background="cream"
           cols={4}
           columns={STEPS.map((step, i) => ({
             key: step.id,
@@ -223,7 +225,7 @@ export default async function HomePage() {
       <Multicolumn
         title="What we developed"
         subtitle="Two drying technologies, the first moringa-leaf energy bar, and cold-pressed seed oil. Built between 2014 and 2019."
-        background
+        background="green"
         cols={4}
         columns={INNOVATIONS.map((item) => ({
           key: item.slug,
@@ -235,7 +237,7 @@ export default async function HomePage() {
         }))}
         footer={
           <div className="mt-10">
-            <a href="/innovation" className="button button--secondary">
+            <a href="/innovation" className="button">
               All four in detail
             </a>
           </div>
@@ -248,6 +250,7 @@ export default async function HomePage() {
           alt={founder.name}
           caption={founder.role}
           title={founder.name}
+          background="lilac"
           reverse
           buttons={[
             { href: "/leadership", label: "His full record" },
@@ -288,7 +291,7 @@ export default async function HomePage() {
       <Multicolumn
         title={`From Madurai to ${COUNTRIES_REACHED} countries`}
         subtitle="Moringa grown, dried and milled in one district in Tamil Nadu, shipped to nine countries on record by name — and in two of them, built from the ground up."
-        background
+        background="sky"
         cols={2}
         columns={PROJECTS.map((p) => ({
           key: p.country,
@@ -299,7 +302,7 @@ export default async function HomePage() {
       >
         <ul className="mb-4 flex flex-wrap gap-2">
           {MARKETS.map((m) => (
-            <li key={m.country} className="badge badge--muted !border-[rgba(18,18,18,0.2)] !px-4 !py-2 !text-[0.8125rem]">
+            <li key={m.country} className="badge !bg-white !text-[rgb(var(--brand-deep))] !px-4 !py-2 !text-[0.8125rem]">
               {m.country}
             </li>
           ))}
@@ -403,7 +406,7 @@ export default async function HomePage() {
         <RichText
           title={get("final-cta")?.title ?? "Discover the miracle"}
           subtitle={get("final-cta")?.subtitle ?? null}
-          background
+          background="magenta"
           buttons={[
             { href: get("final-cta")?.ctaHref ?? "/shop", label: get("final-cta")?.ctaLabel ?? "Shop now" },
             { href: "/moringa", label: "Discover moringa" },

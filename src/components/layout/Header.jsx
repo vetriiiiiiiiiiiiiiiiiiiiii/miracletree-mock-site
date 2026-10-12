@@ -73,8 +73,8 @@ export function Header({
       </a>
 
       {announcement ? (
-        <div className="border-b border-[rgba(18,18,18,0.08)] bg-white">
-          <p className="page-width py-2.5 text-center text-[0.8125rem] leading-snug tracking-[0.0625rem] text-[rgba(18,18,18,0.75)]">
+        <div className="bg-[rgb(var(--brand-deep))]">
+          <p className="page-width py-2.5 text-center text-[0.8125rem] leading-snug tracking-[0.0625rem] text-white">
             {announcement}
           </p>
         </div>
